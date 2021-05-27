@@ -10,6 +10,7 @@ import (
 	"github.com/cloudskiff/driftctl/pkg/parallel"
 	"github.com/cloudskiff/driftctl/pkg/remote/aws/client"
 	"github.com/cloudskiff/driftctl/pkg/remote/aws/repository"
+	"github.com/cloudskiff/driftctl/pkg/remote/cache"
 	remoteerror "github.com/cloudskiff/driftctl/pkg/remote/error"
 	tf "github.com/cloudskiff/driftctl/pkg/remote/terraform"
 	"github.com/cloudskiff/driftctl/pkg/resource"
@@ -39,7 +40,7 @@ func TestS3BucketInventorySupplier_Resources(t *testing.T) {
 					{Name: awssdk.String("bucket-martin-test-drift")},
 					{Name: awssdk.String("bucket-martin-test-drift2")},
 					{Name: awssdk.String("bucket-martin-test-drift3")},
-				}, nil)
+				}, nil).Once()
 
 				repository.On(
 					"GetBucketLocation",
@@ -47,7 +48,7 @@ func TestS3BucketInventorySupplier_Resources(t *testing.T) {
 				).Return(
 					"eu-west-1",
 					nil,
-				)
+				).Once()
 
 				repository.On(
 					"GetBucketLocation",
@@ -55,7 +56,7 @@ func TestS3BucketInventorySupplier_Resources(t *testing.T) {
 				).Return(
 					"eu-west-3",
 					nil,
-				)
+				).Once()
 
 				repository.On(
 					"GetBucketLocation",
@@ -63,7 +64,7 @@ func TestS3BucketInventorySupplier_Resources(t *testing.T) {
 				).Return(
 					"eu-west-1",
 					nil,
-				)
+				).Once()
 
 				repository.On(
 					"ListBucketInventoryConfigurations",
@@ -75,13 +76,13 @@ func TestS3BucketInventorySupplier_Resources(t *testing.T) {
 						{Id: awssdk.String("Inventory2_Bucket2")},
 					},
 					nil,
-				)
+				).Once()
 			},
 		},
 		{
 			test: "cannot list bucket", dirName: "s3_bucket_inventories_list_bucket",
 			mocks: func(repository *repository.MockS3Repository) {
-				repository.On("ListAllBuckets").Return(nil, awserr.NewRequestFailure(nil, 403, ""))
+				repository.On("ListAllBuckets").Return(nil, awserr.NewRequestFailure(nil, 403, "")).Once()
 			},
 			wantErr: remoteerror.NewResourceEnumerationErrorWithType(awserr.NewRequestFailure(nil, 403, ""), resourceaws.AwsS3BucketInventoryResourceType, resourceaws.AwsS3BucketResourceType),
 		},
@@ -93,14 +94,14 @@ func TestS3BucketInventorySupplier_Resources(t *testing.T) {
 						{Name: awssdk.String("bucket-martin-test-drift")},
 					},
 					nil,
-				)
+				).Once()
 				repository.On(
 					"GetBucketLocation",
 					&s3.Bucket{Name: awssdk.String("bucket-martin-test-drift")},
 				).Return(
 					"eu-west-3",
 					nil,
-				)
+				).Once()
 				repository.On(
 					"ListBucketInventoryConfigurations",
 					&s3.Bucket{Name: awssdk.String("bucket-martin-test-drift")},
@@ -108,7 +109,7 @@ func TestS3BucketInventorySupplier_Resources(t *testing.T) {
 				).Return(
 					nil,
 					awserr.NewRequestFailure(nil, 403, ""),
-				)
+				).Once()
 			},
 			wantErr: remoteerror.NewResourceEnumerationError(awserr.NewRequestFailure(nil, 403, ""), resourceaws.AwsS3BucketInventoryResourceType),
 		},
@@ -125,7 +126,7 @@ func TestS3BucketInventorySupplier_Resources(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			repository := repository.NewS3Repository(client.NewAWSClientFactory(provider.session))
+			repository := repository.NewS3Repository(client.NewAWSClientFactory(provider.session), cache.New(10))
 			supplierLibrary.AddSupplier(NewS3BucketInventorySupplier(provider, repository))
 		}
 

@@ -10,6 +10,7 @@ import (
 	"github.com/cloudskiff/driftctl/pkg/parallel"
 	"github.com/cloudskiff/driftctl/pkg/remote/aws/client"
 	"github.com/cloudskiff/driftctl/pkg/remote/aws/repository"
+	"github.com/cloudskiff/driftctl/pkg/remote/cache"
 	remoteerror "github.com/cloudskiff/driftctl/pkg/remote/error"
 	tf "github.com/cloudskiff/driftctl/pkg/remote/terraform"
 	"github.com/cloudskiff/driftctl/pkg/resource"
@@ -38,7 +39,7 @@ func TestS3BucketNotificationSupplier_Resources(t *testing.T) {
 					"ListAllBuckets",
 				).Return([]*s3.Bucket{
 					{Name: awssdk.String("dritftctl-test-no-notifications")},
-				}, nil)
+				}, nil).Once()
 
 				repository.On(
 					"GetBucketLocation",
@@ -46,7 +47,7 @@ func TestS3BucketNotificationSupplier_Resources(t *testing.T) {
 				).Return(
 					"eu-west-3",
 					nil,
-				)
+				).Once()
 			},
 		},
 		{
@@ -58,7 +59,7 @@ func TestS3BucketNotificationSupplier_Resources(t *testing.T) {
 					{Name: awssdk.String("bucket-martin-test-drift")},
 					{Name: awssdk.String("bucket-martin-test-drift2")},
 					{Name: awssdk.String("bucket-martin-test-drift3")},
-				}, nil)
+				}, nil).Once()
 
 				repository.On(
 					"GetBucketLocation",
@@ -66,7 +67,7 @@ func TestS3BucketNotificationSupplier_Resources(t *testing.T) {
 				).Return(
 					"eu-west-1",
 					nil,
-				)
+				).Once()
 
 				repository.On(
 					"GetBucketLocation",
@@ -74,7 +75,7 @@ func TestS3BucketNotificationSupplier_Resources(t *testing.T) {
 				).Return(
 					"eu-west-3",
 					nil,
-				)
+				).Once()
 
 				repository.On(
 					"GetBucketLocation",
@@ -82,13 +83,13 @@ func TestS3BucketNotificationSupplier_Resources(t *testing.T) {
 				).Return(
 					"ap-northeast-1",
 					nil,
-				)
+				).Once()
 			},
 		},
 		{
 			test: "Cannot list bucket", dirName: "s3_bucket_notifications_list_bucket",
 			mocks: func(repository *repository.MockS3Repository) {
-				repository.On("ListAllBuckets").Return(nil, awserr.NewRequestFailure(nil, 403, ""))
+				repository.On("ListAllBuckets").Return(nil, awserr.NewRequestFailure(nil, 403, "")).Once()
 			},
 			wantErr: remoteerror.NewResourceEnumerationErrorWithType(awserr.NewRequestFailure(nil, 403, ""), resourceaws.AwsS3BucketNotificationResourceType, resourceaws.AwsS3BucketResourceType),
 		},
@@ -104,7 +105,7 @@ func TestS3BucketNotificationSupplier_Resources(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			repository := repository.NewS3Repository(client.NewAWSClientFactory(provider.session))
+			repository := repository.NewS3Repository(client.NewAWSClientFactory(provider.session), cache.New(10))
 			supplierLibrary.AddSupplier(NewS3BucketNotificationSupplier(provider, repository))
 		}
 
