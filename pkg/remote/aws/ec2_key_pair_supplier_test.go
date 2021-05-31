@@ -77,7 +77,7 @@ func TestEC2KeyPairSupplier_Resources(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			supplierLibrary.AddSupplier(NewEC2KeyPairSupplier(provider, cache.New(0)))
+			supplierLibrary.AddSupplier(NewEC2KeyPairSupplier(provider, repository.NewEC2Repository(provider.session, cache.New(0))))
 		}
 
 		t.Run(tt.test, func(t *testing.T) {

@@ -90,7 +90,7 @@ func TestLambdaFunctionSupplier_Resources(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			supplierLibrary.AddSupplier(NewLambdaFunctionSupplier(provider))
+			supplierLibrary.AddSupplier(NewLambdaFunctionSupplier(provider, repository.NewLambdaRepository(provider.session)))
 		}
 
 		t.Run(tt.test, func(t *testing.T) {

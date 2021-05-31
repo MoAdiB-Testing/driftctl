@@ -73,7 +73,7 @@ func TestEC2AmiSupplier_Resources(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			supplierLibrary.AddSupplier(NewEC2AmiSupplier(provider, cache.New(0)))
+			supplierLibrary.AddSupplier(NewEC2AmiSupplier(provider, repository.NewEC2Repository(provider.session, cache.New(0))))
 		}
 
 		t.Run(tt.test, func(t *testing.T) {

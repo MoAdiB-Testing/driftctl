@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/cloudskiff/driftctl/pkg/remote/aws/repository"
 
 	remoteerror "github.com/cloudskiff/driftctl/pkg/remote/error"
 
@@ -76,7 +77,7 @@ func TestDynamoDBTableSupplier_Resources(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			supplierLibrary.AddSupplier(NewDynamoDBTableSupplier(provider))
+			supplierLibrary.AddSupplier(NewDynamoDBTableSupplier(provider, repository.NewDynamoDBRepository(provider.session)))
 		}
 
 		t.Run(c.test, func(tt *testing.T) {

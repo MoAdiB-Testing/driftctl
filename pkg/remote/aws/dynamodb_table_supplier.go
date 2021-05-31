@@ -20,11 +20,11 @@ type DynamoDBTableSupplier struct {
 	runner       *terraform.ParallelResourceReader
 }
 
-func NewDynamoDBTableSupplier(provider *AWSTerraformProvider) *DynamoDBTableSupplier {
+func NewDynamoDBTableSupplier(provider *AWSTerraformProvider, repo repository.DynamoDBRepository) *DynamoDBTableSupplier {
 	return &DynamoDBTableSupplier{
 		provider,
 		awsdeserializer.NewDynamoDBTableDeserializer(),
-		repository.NewDynamoDBRepository(provider.session),
+		repo,
 		terraform.NewParallelResourceReader(provider.Runner().SubRunner()),
 	}
 }

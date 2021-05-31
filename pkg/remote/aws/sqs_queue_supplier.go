@@ -19,11 +19,11 @@ type SqsQueueSupplier struct {
 	runner       *terraform.ParallelResourceReader
 }
 
-func NewSqsQueueSupplier(provider *AWSTerraformProvider) *SqsQueueSupplier {
+func NewSqsQueueSupplier(provider *AWSTerraformProvider, client repository.SQSRepository) *SqsQueueSupplier {
 	return &SqsQueueSupplier{
 		provider,
 		awsdeserializer.NewSqsQueueDeserializer(),
-		repository.NewSQSClient(provider.session),
+		client,
 		terraform.NewParallelResourceReader(provider.Runner().SubRunner()),
 	}
 }

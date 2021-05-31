@@ -80,7 +80,7 @@ func TestDBSubnetGroupSupplier_Resources(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			supplierLibrary.AddSupplier(NewDBInstanceSupplier(provider))
+			supplierLibrary.AddSupplier(NewDBInstanceSupplier(provider, repository.NewRDSRepository(provider.session)))
 		}
 
 		t.Run(tt.test, func(t *testing.T) {

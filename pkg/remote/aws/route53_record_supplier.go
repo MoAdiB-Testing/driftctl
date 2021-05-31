@@ -24,11 +24,11 @@ type Route53RecordSupplier struct {
 	runner       *terraform.ParallelResourceReader
 }
 
-func NewRoute53RecordSupplier(provider *AWSTerraformProvider) *Route53RecordSupplier {
+func NewRoute53RecordSupplier(provider *AWSTerraformProvider, repo repository.Route53Repository) *Route53RecordSupplier {
 	return &Route53RecordSupplier{
 		provider,
 		awsdeserializer.NewRoute53RecordDeserializer(),
-		repository.NewRoute53Repository(provider.session),
+		repo,
 		terraform.NewParallelResourceReader(provider.Runner().SubRunner())}
 }
 

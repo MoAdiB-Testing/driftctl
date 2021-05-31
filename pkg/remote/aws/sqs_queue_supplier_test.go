@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	awssdk "github.com/aws/aws-sdk-go/aws"
+	"github.com/cloudskiff/driftctl/pkg/remote/aws/repository"
 
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	remoteerror "github.com/cloudskiff/driftctl/pkg/remote/error"
@@ -68,7 +69,7 @@ func TestSqsQueueSupplier_Resources(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			supplierLibrary.AddSupplier(NewSqsQueueSupplier(provider))
+			supplierLibrary.AddSupplier(NewSqsQueueSupplier(provider, repository.NewSQSClient(provider.session)))
 		}
 
 		t.Run(c.test, func(tt *testing.T) {

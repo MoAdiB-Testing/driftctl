@@ -21,11 +21,11 @@ type KMSKeySupplier struct {
 	runner       *terraform.ParallelResourceReader
 }
 
-func NewKMSKeySupplier(provider *AWSTerraformProvider) *KMSKeySupplier {
+func NewKMSKeySupplier(provider *AWSTerraformProvider, repo repository.KMSRepository) *KMSKeySupplier {
 	return &KMSKeySupplier{
 		provider,
 		awsdeserializer.NewKMSKeyDeserializer(),
-		repository.NewKMSRepository(provider.session),
+		repo,
 		terraform.NewParallelResourceReader(provider.Runner().SubRunner()),
 	}
 }

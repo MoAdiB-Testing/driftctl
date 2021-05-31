@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/cloudskiff/driftctl/pkg/remote/aws/repository"
 
 	"github.com/aws/aws-sdk-go/service/sns"
 
@@ -96,7 +97,7 @@ func TestSNSTopicSubscriptionSupplier_Resources(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			supplierLibrary.AddSupplier(NewSNSTopicSubscriptionSupplier(provider, a))
+			supplierLibrary.AddSupplier(NewSNSTopicSubscriptionSupplier(provider, a, repository.NewSNSClient(provider.session)))
 		}
 
 		t.Run(c.test, func(tt *testing.T) {

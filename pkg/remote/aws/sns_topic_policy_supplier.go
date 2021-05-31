@@ -21,11 +21,11 @@ type SNSTopicPolicySupplier struct {
 	runner       *terraform.ParallelResourceReader
 }
 
-func NewSNSTopicPolicySupplier(provider *AWSTerraformProvider) *SNSTopicPolicySupplier {
+func NewSNSTopicPolicySupplier(provider *AWSTerraformProvider, repo repository.SNSRepository) *SNSTopicPolicySupplier {
 	return &SNSTopicPolicySupplier{
 		provider,
 		awsdeserializer.NewSNSTopicPolicyDeserializer(),
-		repository.NewSNSClient(provider.session),
+		repo,
 		terraform.NewParallelResourceReader(provider.Runner().SubRunner()),
 	}
 }

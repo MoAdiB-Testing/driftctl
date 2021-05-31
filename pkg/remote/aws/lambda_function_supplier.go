@@ -20,11 +20,11 @@ type LambdaFunctionSupplier struct {
 	runner       *terraform.ParallelResourceReader
 }
 
-func NewLambdaFunctionSupplier(provider *AWSTerraformProvider) *LambdaFunctionSupplier {
+func NewLambdaFunctionSupplier(provider *AWSTerraformProvider, repo repository.LambdaRepository) *LambdaFunctionSupplier {
 	return &LambdaFunctionSupplier{
 		provider,
 		awsdeserializer.NewLambdaFunctionDeserializer(),
-		repository.NewLambdaRepository(provider.session),
+		repo,
 		terraform.NewParallelResourceReader(provider.Runner().SubRunner()),
 	}
 }

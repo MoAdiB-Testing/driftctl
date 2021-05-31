@@ -94,7 +94,7 @@ func TestEC2InstanceSupplier_Resources(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			supplierLibrary.AddSupplier(NewEC2InstanceSupplier(provider, cache.New(0)))
+			supplierLibrary.AddSupplier(NewEC2InstanceSupplier(provider, repository.NewEC2Repository(provider.session, cache.New(0))))
 		}
 
 		t.Run(tt.test, func(t *testing.T) {

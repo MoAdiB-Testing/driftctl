@@ -71,7 +71,7 @@ func TestKMSAliasSupplier_Resources(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			supplierLibrary.AddSupplier(NewKMSAliasSupplier(provider))
+			supplierLibrary.AddSupplier(NewKMSAliasSupplier(provider, repository.NewKMSRepository(provider.session)))
 		}
 
 		t.Run(c.test, func(tt *testing.T) {

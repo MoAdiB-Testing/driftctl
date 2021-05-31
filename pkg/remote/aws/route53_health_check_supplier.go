@@ -21,11 +21,11 @@ type Route53HealthCheckSupplier struct {
 	runner       *terraform.ParallelResourceReader
 }
 
-func NewRoute53HealthCheckSupplier(provider *AWSTerraformProvider) *Route53HealthCheckSupplier {
+func NewRoute53HealthCheckSupplier(provider *AWSTerraformProvider, repo repository.Route53Repository) *Route53HealthCheckSupplier {
 	return &Route53HealthCheckSupplier{
 		provider,
 		awsdeserializer.NewRoute53HealthCheckDeserializer(),
-		repository.NewRoute53Repository(provider.session),
+		repo,
 		terraform.NewParallelResourceReader(provider.Runner().SubRunner()),
 	}
 }

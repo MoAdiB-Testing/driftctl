@@ -20,11 +20,11 @@ type LambdaEventSourceMappingSupplier struct {
 	runner       *terraform.ParallelResourceReader
 }
 
-func NewLambdaEventSourceMappingSupplier(provider *AWSTerraformProvider) *LambdaEventSourceMappingSupplier {
+func NewLambdaEventSourceMappingSupplier(provider *AWSTerraformProvider, repo repository.LambdaRepository) *LambdaEventSourceMappingSupplier {
 	return &LambdaEventSourceMappingSupplier{
 		provider,
 		awsdeserializer.NewLambdaEventSourceMappingDeserializer(),
-		repository.NewLambdaRepository(provider.session),
+		repo,
 		terraform.NewParallelResourceReader(provider.Runner().SubRunner()),
 	}
 }

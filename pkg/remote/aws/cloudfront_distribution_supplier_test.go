@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/cloudskiff/driftctl/pkg/remote/aws/repository"
 
 	"github.com/aws/aws-sdk-go/service/cloudfront"
 
@@ -69,7 +70,7 @@ func TestCloudfrontDistributionSupplier_Resources(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			supplierLibrary.AddSupplier(NewCloudfrontDistributionSupplier(provider))
+			supplierLibrary.AddSupplier(NewCloudfrontDistributionSupplier(provider, repository.NewCloudfrontClient(provider.session)))
 		}
 
 		t.Run(c.test, func(tt *testing.T) {

@@ -21,11 +21,11 @@ type ECRRepositorySupplier struct {
 	runner       *terraform.ParallelResourceReader
 }
 
-func NewECRRepositorySupplier(provider *AWSTerraformProvider) *ECRRepositorySupplier {
+func NewECRRepositorySupplier(provider *AWSTerraformProvider, repo repository.ECRRepository) *ECRRepositorySupplier {
 	return &ECRRepositorySupplier{
 		provider,
 		awsdeserializer.NewECRRepositoryDeserializer(),
-		repository.NewECRRepository(provider.session),
+		repo,
 		terraform.NewParallelResourceReader(provider.Runner().SubRunner()),
 	}
 }

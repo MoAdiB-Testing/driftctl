@@ -41,11 +41,11 @@ type SNSTopicSubscriptionSupplier struct {
 	alerter      alerter.AlerterInterface
 }
 
-func NewSNSTopicSubscriptionSupplier(provider *AWSTerraformProvider, a alerter.AlerterInterface) *SNSTopicSubscriptionSupplier {
+func NewSNSTopicSubscriptionSupplier(provider *AWSTerraformProvider, a alerter.AlerterInterface, client repository.SNSRepository) *SNSTopicSubscriptionSupplier {
 	return &SNSTopicSubscriptionSupplier{
 		provider,
 		awsdeserializer.NewSNSTopicSubscriptionDeserializer(),
-		repository.NewSNSClient(provider.session),
+		client,
 		terraform.NewParallelResourceReader(provider.Runner().SubRunner()),
 		a,
 	}

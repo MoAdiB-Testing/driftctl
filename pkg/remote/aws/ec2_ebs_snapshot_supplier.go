@@ -2,7 +2,6 @@ package aws
 
 import (
 	"github.com/cloudskiff/driftctl/pkg/remote/aws/repository"
-	"github.com/cloudskiff/driftctl/pkg/remote/cache"
 	remoteerror "github.com/cloudskiff/driftctl/pkg/remote/error"
 
 	"github.com/cloudskiff/driftctl/pkg/remote/deserializer"
@@ -24,11 +23,11 @@ type EC2EbsSnapshotSupplier struct {
 	runner       *terraform.ParallelResourceReader
 }
 
-func NewEC2EbsSnapshotSupplier(provider *AWSTerraformProvider, c cache.Cache) *EC2EbsSnapshotSupplier {
+func NewEC2EbsSnapshotSupplier(provider *AWSTerraformProvider, repo repository.EC2Repository) *EC2EbsSnapshotSupplier {
 	return &EC2EbsSnapshotSupplier{
 		provider,
 		awsdeserializer.NewEC2EbsSnapshotDeserializer(),
-		repository.NewEC2Repository(provider.session, c),
+		repo,
 		terraform.NewParallelResourceReader(provider.Runner().SubRunner()),
 	}
 }

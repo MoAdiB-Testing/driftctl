@@ -2,7 +2,6 @@ package aws
 
 import (
 	"github.com/cloudskiff/driftctl/pkg/remote/aws/repository"
-	"github.com/cloudskiff/driftctl/pkg/remote/cache"
 	remoteerror "github.com/cloudskiff/driftctl/pkg/remote/error"
 
 	"github.com/cloudskiff/driftctl/pkg/remote/deserializer"
@@ -24,11 +23,11 @@ type EC2EbsVolumeSupplier struct {
 	runner       *terraform.ParallelResourceReader
 }
 
-func NewEC2EbsVolumeSupplier(provider *AWSTerraformProvider, c cache.Cache) *EC2EbsVolumeSupplier {
+func NewEC2EbsVolumeSupplier(provider *AWSTerraformProvider, repo repository.EC2Repository) *EC2EbsVolumeSupplier {
 	return &EC2EbsVolumeSupplier{
 		provider,
 		awsdeserializer.NewEC2EbsVolumeDeserializer(),
-		repository.NewEC2Repository(provider.session, c),
+		repo,
 		terraform.NewParallelResourceReader(provider.Runner().SubRunner()),
 	}
 }

@@ -20,11 +20,11 @@ type CloudfrontDistributionSupplier struct {
 	runner       *terraform.ParallelResourceReader
 }
 
-func NewCloudfrontDistributionSupplier(provider *AWSTerraformProvider) *CloudfrontDistributionSupplier {
+func NewCloudfrontDistributionSupplier(provider *AWSTerraformProvider, repo repository.CloudfrontRepository) *CloudfrontDistributionSupplier {
 	return &CloudfrontDistributionSupplier{
 		provider,
 		awsdeserializer.NewCloudfrontDistributionDeserializer(),
-		repository.NewCloudfrontClient(provider.session),
+		repo,
 		terraform.NewParallelResourceReader(provider.Runner().SubRunner()),
 	}
 }

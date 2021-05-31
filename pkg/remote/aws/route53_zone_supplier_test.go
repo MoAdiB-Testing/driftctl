@@ -109,7 +109,7 @@ func TestRoute53ZoneSupplier_Resources(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			supplierLibrary.AddSupplier(NewRoute53ZoneSupplier(provider))
+			supplierLibrary.AddSupplier(NewRoute53ZoneSupplier(provider, repository.NewRoute53Repository(provider.session)))
 		}
 
 		t.Run(tt.test, func(t *testing.T) {
